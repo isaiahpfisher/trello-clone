@@ -1,7 +1,12 @@
-"use client"
+"use client";
 
-import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { Activity, CreditCard, Layout, Settings } from "lucide-react";
 import Image from "next/image";
@@ -12,7 +17,7 @@ export type Organization = {
   slug: string;
   imageUrl: string;
   name: string;
-}
+};
 
 interface NavItemProps {
   isExpanded: boolean;
@@ -21,67 +26,91 @@ interface NavItemProps {
   onExpand: (id: string) => void;
 }
 
-export const NavItem = ({isExpanded, isActive, organization, onExpand}: NavItemProps) => {
-
+export const NavItem = ({
+  isExpanded,
+  isActive,
+  organization,
+  onExpand,
+}: NavItemProps) => {
   const router = useRouter();
   const pathname = usePathname();
 
   const routes = [
     {
       label: "Boards",
-      icon: <Layout className="size-4 mr-2" />,
-      href: `/organization/${organization.id}`
+      icon: <Layout className="mr-2 size-4" />,
+      href: `/organization/${organization.id}`,
     },
     {
       label: "Activity",
-      icon: <Activity className="size-4 mr-2" />,
-      href: `/organization/${organization.id}/activity`
+      icon: <Activity className="mr-2 size-4" />,
+      href: `/organization/${organization.id}/activity`,
     },
     {
       label: "Settings",
-      icon: <Settings className="size-4 mr-2" />,
-      href: `/organization/${organization.id}/settings`
+      icon: <Settings className="mr-2 size-4" />,
+      href: `/organization/${organization.id}/settings`,
     },
     {
       label: "Billing",
-      icon: <CreditCard className="size-4 mr-2" />,
-      href: `/organization/${organization.id}/billing`
+      icon: <CreditCard className="mr-2 size-4" />,
+      href: `/organization/${organization.id}/billing`,
     },
   ];
 
   const onClick = (href: string) => {
     router.push(href);
-  }
+  };
 
   return (
-  <AccordionItem value={organization.id} className="border-none">
-    <AccordionTrigger onClick={() => onExpand(organization.id)} className={cn(
-      "flex items-center gap-x-2 p-1.5 text-neutral-700 rounded-md hover:bg-neutral-500/10 transition text-start no-underline hover:no-underline",
-      isActive && !isExpanded && "bg-sky-500/10 text-sky-700"
-    )}>
-      <div className="flex items-center gap-x-2">
-        <div className="size-7 relative">
-          <Image fill src={organization.imageUrl} alt={organization.name} className="object-cover rounded-sm" />
+    <AccordionItem value={organization.id} className="border-none">
+      <AccordionTrigger
+        onClick={() => onExpand(organization.id)}
+        className={cn(
+          "flex items-center gap-x-2 rounded-md p-1.5 text-start text-neutral-700 no-underline transition hover:bg-neutral-500/10 hover:no-underline",
+          isActive && !isExpanded && "bg-sky-500/10 text-sky-700",
+        )}
+      >
+        <div className="flex items-center gap-x-2">
+          <div className="relative size-7">
+            <Image
+              fill
+              src={organization.imageUrl}
+              alt={organization.name}
+              className="rounded-sm object-cover"
+            />
+          </div>
+          <span className="text-sm font-medium">{organization.name}</span>
         </div>
-        <span className="font-medium text-sm">{organization.name}</span>
-      </div>
-    </AccordionTrigger>
-    <AccordionContent className="pt-1 text-neutral-700">
-      {routes.map((route) => (
-        <Button
-          key={route.href}
-          size={"sm"}
-          onClick={() => onClick(route.href)}
-          variant={"ghost"}
-          className={cn(
-            "w-full font-normal justify-start pl-10 mb-1",
-            pathname === route.href && "bg-sky-500/10 text-sky-700"
-          )}>
+      </AccordionTrigger>
+      <AccordionContent className="pt-1 text-neutral-700">
+        {routes.map((route) => (
+          <Button
+            key={route.href}
+            size={"sm"}
+            onClick={() => onClick(route.href)}
+            variant={"ghost"}
+            className={cn(
+              "mb-1 w-full justify-start pl-10 font-normal",
+              pathname === route.href && "bg-sky-500/10 text-sky-700",
+            )}
+          >
             {route.icon}
             {route.label}
-        </Button>
-      ))}
-    </AccordionContent>
-  </AccordionItem>
+          </Button>
+        ))}
+      </AccordionContent>
+    </AccordionItem>
   );
-}
+};
+
+NavItem.Skeleton = function SkeletonNavItem() {
+  return (
+    <div className="flex items-center gap-x-2">
+      <div className="relative size-10 shrink-0">
+        <Skeleton className="absolute size-full" />
+      </div>
+      <Skeleton className="h-10 w-full" />
+    </div>
+  );
+};
