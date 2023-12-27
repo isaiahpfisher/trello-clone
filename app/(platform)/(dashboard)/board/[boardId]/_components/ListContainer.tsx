@@ -6,6 +6,10 @@ import { useEffect, useState } from "react";
 import { ListItem } from "./ListItem";
 
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
+import { useAction } from "@/hooks/useAction";
+import { updateListOrder } from "@/actions/update-list-order";
+import { toast } from "sonner";
+import { updateCardOrder } from "@/actions/update-card-order";
 
 interface ListContainerProps {
   data: ListWithCards[];
@@ -22,6 +26,24 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number) {
 
 export const ListContainer = ({ data, boardId }: ListContainerProps) => {
   const [orderedData, setOrderedData] = useState(data);
+
+  const { execute: executeUpdateListOrder } = useAction(updateListOrder, {
+    onSuccess: () => {
+      toast.success("List reordered.");
+    },
+    onError: (error) => {
+      toast.error(error);
+    },
+  });
+
+  const { execute: executeUpdateCardOrder } = useAction(updateCardOrder, {
+    onSuccess: () => {
+      toast.success("Card reordered.");
+    },
+    onError: (error) => {
+      toast.error(error);
+    },
+  });
 
   useEffect(() => {
     setOrderedData(data);
@@ -46,7 +68,7 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
       );
 
       setOrderedData(items);
-      // TODO: TRIGGER SERVER ACTION (TO CHANGE ORDER IN BACKEND)
+      executeUpdateListOrder({ items, boardId });
     }
 
     // If user moves a card
@@ -88,7 +110,7 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
         sourceList.cards = reorderedCards;
 
         setOrderedData(newOrderedData);
-        // TODO: TRIGGER SERVER ACTION (TO CHANGE ORDER IN BACKEND)
+        executeUpdateCardOrder({ boardId, items: reorderedCards });
       }
       // Moving the card to different list
       else {
@@ -111,7 +133,7 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
         });
 
         setOrderedData(newOrderedData);
-        // TODO: TRIGGER SERVER ACTION
+        executeUpdateCardOrder({ boardId, items: destinationList.cards });
       }
     }
   };
