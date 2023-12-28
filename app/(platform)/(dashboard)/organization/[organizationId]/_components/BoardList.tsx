@@ -1,7 +1,9 @@
 import { Hint } from "@/components/Hint";
 import { FormPopover } from "@/components/form/form-popover";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MAX_FREE_BOARDS } from "@/constants/boards";
 import { db } from "@/lib/db";
+import { getNumBoardsUsed } from "@/lib/org-limit";
 import { auth } from "@clerk/nextjs";
 import { HelpCircle, User2 } from "lucide-react";
 import Link from "next/link";
@@ -22,6 +24,8 @@ export const BoardList = async () => {
       createdAt: "desc",
     },
   });
+
+  const numBoardsUsed = await getNumBoardsUsed();
 
   return (
     <div className="space-y-4">
@@ -47,10 +51,12 @@ export const BoardList = async () => {
             className="relative flex aspect-video size-full flex-col items-center justify-center gap-y-1 rounded-sm bg-muted transition hover:opacity-75"
           >
             <p className="text-sm">Create New Board</p>
-            <span className="text-xs">5 Remaining</span>
+            <span className="text-xs">
+              {MAX_FREE_BOARDS - numBoardsUsed} Remaining
+            </span>
             <Hint
               sideOffset={40}
-              description={`Free Workspaces can have up to 5 open boards. For unlimited boards, upgrade this workspace.`}
+              description={`Free Workspaces can have up to ${MAX_FREE_BOARDS} open boards. For unlimited boards, upgrade this workspace.`}
             >
               <HelpCircle className="absolute bottom-2 right-2 size-[14px]" />
             </Hint>
