@@ -3,7 +3,7 @@ I made this project by following along with [Code with Antonio's tutorial](https
 - Go to the [live version](https://taskify.isaiahpfisher.com).
 - It was made with Next.js and deployed with Vercel.
 ### Things Learned
-I learned the following by building Jotion:
+I learned the following by building Taskify:
 - I learned how to implement a project with organizations and user roles.
 - I learned how to work with Stripe and a subscription model.
 - I got more comfortable reading documentation and implementing technologies.
