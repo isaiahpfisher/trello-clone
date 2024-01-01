@@ -2,6 +2,7 @@
 I made this project by following along with [Code with Antonio's tutorial](https://www.youtube.com/watch?v=pRybm9lXW2c).
 - Go to the [live version](https://taskify.isaiahpfisher.com).
 - It was made with Next.js and deployed with Vercel.
+- It uses a MySQL database hosted on Supabase and Prisma ORM.
 ### Things Learned
 I learned the following by building Taskify:
 - I learned how to implement a project with organizations and user roles.
